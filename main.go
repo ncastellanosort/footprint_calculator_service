@@ -12,8 +12,7 @@ const PORT int = 8080
 
 func main() {
 
-	fmt.Println(fmt.Sprintf("server running in http://localhost:%d", PORT))
-
+	fmt.Println("server running at http://localhost:", PORT)
 	wg := &sync.WaitGroup{}
 
 	routes.SetupCalculatorRoutes(wg)
