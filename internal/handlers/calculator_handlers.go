@@ -10,7 +10,7 @@ import (
 )
 
 type Message struct {
-	Result float32
+	Result float32 `json:"result"`
 }
 
 func CalculatorHandler(w http.ResponseWriter, r *http.Request, respch chan float32, wg *sync.WaitGroup) {

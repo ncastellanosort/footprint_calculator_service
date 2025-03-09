@@ -1,10 +1,10 @@
 package config
 
 type Answers struct {
-	Transport []float32
-	Food      []float32
-	Energy    []float32
-	Waste     []float32
+	Transport []float32 `json:"transport"`
+	Food      []float32 `json:"food"`
+	Energy    []float32 `json:"energy"`
+	Waste     []float32 `json:"waste"`
 }
 
 var EmisionFactors = struct {
