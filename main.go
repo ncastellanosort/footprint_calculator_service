@@ -14,13 +14,13 @@ func main() {
 
 	fmt.Println(fmt.Sprintf("server running in http://localhost:%d", PORT))
 
-	respch := make(chan float32, 4)
 	wg := &sync.WaitGroup{}
 
-	routes.SetupCalculatorRoutes(respch, wg)
+	routes.SetupCalculatorRoutes(wg)
 
 	err := http.ListenAndServe(fmt.Sprintf(":%d", PORT), nil)
 	if err != nil {
 		log.Fatal(err)
 	}
+
 }

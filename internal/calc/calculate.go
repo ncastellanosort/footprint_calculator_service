@@ -16,7 +16,6 @@ func Calculator(data *config.Answers, respch chan float32, wg *sync.WaitGroup) f
 
 	wg.Wait()
 	close(respch)
-
 	var footprint float32
 
 	for value := range respch {
