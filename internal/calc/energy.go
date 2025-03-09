@@ -6,7 +6,8 @@ import (
 	"sync"
 )
 
-func CalculateEnergy(answers *config.Answers, respch chan float32, wg *sync.WaitGroup) float32 {
+func CalculateEnergy(answers *config.Answers, respch chan float32, wg *sync.WaitGroup) {
+	defer wg.Done()
 	value := utils.MultiplyAnswersAndEF(answers.Energy, config.EmisionFactors.EnergyEmission)
-	return value
+	respch <- value
 }

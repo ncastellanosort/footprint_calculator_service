@@ -6,7 +6,8 @@ import (
 	"sync"
 )
 
-func CalculateTransport(answers *config.Answers, respch chan float32, wg *sync.WaitGroup) float32 {
+func CalculateTransport(answers *config.Answers, respch chan float32, wg *sync.WaitGroup) {
+	defer wg.Done()
 	value := utils.MultiplyAnswersAndEF(answers.Transport, config.EmisionFactors.TransportEmission)
-	return value
+	respch <- value
 }

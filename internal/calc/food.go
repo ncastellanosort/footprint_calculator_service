@@ -6,7 +6,8 @@ import (
 	"sync"
 )
 
-func CalculateFood(answers *config.Answers, respch chan float32, wg *sync.WaitGroup) float32 {
+func CalculateFood(answers *config.Answers, respch chan float32, wg *sync.WaitGroup) {
+	defer wg.Done()
 	value := utils.MultiplyAnswersAndEF(answers.Food, config.EmisionFactors.FoodEmission)
-	return value
+	respch <- value
 }
