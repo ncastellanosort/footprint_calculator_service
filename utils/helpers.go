@@ -21,6 +21,7 @@ func MultiplyAnswersAndEF(answers []float32, ef []float32) float32 {
 
 func AnswersToArray(data config.Data) []float32 {
 	var res []float32
-
+	// iterar los valores de cada uno con el key, value
+	// creo que debe estar dentro de config y debe estar attach a la struct
 	return res
 }
