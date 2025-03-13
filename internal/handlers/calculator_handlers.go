@@ -2,9 +2,7 @@ package handlers
 
 import (
 	"carbon_calculator/config"
-	"carbon_calculator/internal/calc"
 	"encoding/json"
-	"math"
 	"net/http"
 	"sync"
 )
@@ -28,20 +26,23 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, respch chan float
 		return
 	}
 
+	defer r.Body.Close()
 	w.Header().Set("Content-type", "application/json")
 
-	var answer config.Answers
+	var answer config.Data
+	json.NewDecoder(r.Body).Decode(&answer)
+	json.NewEncoder(w).Encode(answer)
+	/* 	if err := json.NewDecoder(r.Body).Decode(&answer); err != nil {
+	   		http.Error(w, "invalid request body", http.StatusBadRequest)
+	   		return
+	   		}
+	   	   d	efer r.Body.Close()
 
-	if err := json.NewDecoder(r.Body).Decode(&answer); err != nil {
-		http.Error(w, "invalid request body", http.StatusBadRequest)
-		return
-	}
-	defer r.Body.Close()
+	   	   	value := calc.Calculator(&answer, respch, wg)
+	   	   	rounded_value := float32(math.Round(float64(value)*10) / 10)
 
-	value := calc.Calculator(&answer, respch, wg)
-	rounded_value := float32(math.Round(float64(value)*10) / 10)
-
-	if err := json.NewEncoder(w).Encode(Message{Result: rounded_value}); err != nil {
-		http.Error(w, "failed to encode response", http.StatusInternalServerError)
-	}
+	   	   	if err := json.NewEncoder(w).Encode(Message{Result: rounded_value}); err != nil {
+	   	   		http.Error(w, "failed to encode response", http.StatusInternalServerError)
+	   	}
+	*/
 }

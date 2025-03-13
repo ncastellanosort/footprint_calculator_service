@@ -1,6 +1,9 @@
 package utils
 
-import "log"
+import (
+	"carbon_calculator/config"
+	"log"
+)
 
 func MultiplyAnswersAndEF(answers []float32, ef []float32) float32 {
 	var res float32
@@ -12,6 +15,12 @@ func MultiplyAnswersAndEF(answers []float32, ef []float32) float32 {
 	for index, answer := range answers {
 		res += answer * ef[index]
 	}
+
+	return res
+}
+
+func AnswersToArray(data config.Data) []float32 {
+	var res []float32
 
 	return res
 }
