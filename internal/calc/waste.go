@@ -6,8 +6,8 @@ import (
 	"sync"
 )
 
-func CalculateWaste(answers *config.Answers, respch chan float32, wg *sync.WaitGroup) {
+func CalculateWaste(answers []float32, respch chan float32, wg *sync.WaitGroup) {
 	defer wg.Done()
-	value := utils.MultiplyAnswersAndEF(answers.Waste, config.EmisionFactors.WasteEmission)
+	value := utils.MultiplyAnswersAndEF(answers, config.EmisionFactors.WasteEmission)
 	respch <- value
 }

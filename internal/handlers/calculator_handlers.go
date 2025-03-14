@@ -2,8 +2,10 @@ package handlers
 
 import (
 	"carbon_calculator/config"
+	"carbon_calculator/internal/calc"
 	"carbon_calculator/utils"
 	"encoding/json"
+	"math"
 	"net/http"
 	"sync"
 )
@@ -38,24 +40,11 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, respch chan float
 	var answer config.Data
 	json.NewDecoder(r.Body).Decode(&answer)
 
-	energy := utils.AnswersToArray(answer.Energy)
-	waste := utils.AnswersToArray(answer.Waste)
-	transport := utils.AnswersToArray(answer.Transport)
-	food := utils.AnswersToArray(answer.Food)
+	answers := utils.GetAnswers(answer)
 
-	answers := config.Answers{
-		Transport: transport,
-		Energy:    energy,
-		Waste:     waste,
-		Food:      food,
-	}
+	value := calc.Calculator(answers, respch, wg)
+	rounded_value := float32(math.Round(float64(value)*10) / 10)
 
-	json.NewEncoder(w).Encode(answers)
-	defer r.Body.Close()
-	/*
-			value := calc.Calculator(&answers, respch, wg)
-		rounded_value := float32(math.Round(float64(value)*10) / 10)
+	json.NewEncoder(w).Encode(DataMessage{Data: answer, Result: rounded_value})
 
-			json.NewEncoder(w).Encode(DataMessage{Data: answer, Result: rounded_value})
-	*/
 }

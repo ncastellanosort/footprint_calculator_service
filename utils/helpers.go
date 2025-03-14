@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"carbon_calculator/config"
 	"log"
 )
 
@@ -24,4 +25,19 @@ func AnswersToArray(d map[string]int) []float32 {
 		res = append(res, float32(value))
 	}
 	return res
+}
+
+func GetAnswers(answer config.Data) *config.Answers {
+
+	energy := AnswersToArray(answer.Energy)
+	waste := AnswersToArray(answer.Waste)
+	transport := AnswersToArray(answer.Transport)
+	food := AnswersToArray(answer.Food)
+
+	return &config.Answers{
+		Transport: transport,
+		Energy:    energy,
+		Waste:     waste,
+		Food:      food,
+	}
 }
