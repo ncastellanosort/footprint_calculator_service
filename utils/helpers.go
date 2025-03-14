@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"carbon_calculator/config"
 	"log"
 )
 
@@ -19,9 +18,10 @@ func MultiplyAnswersAndEF(answers []float32, ef []float32) float32 {
 	return res
 }
 
-func AnswersToArray(data config.Data) []float32 {
+func AnswersToArray(d map[string]int) []float32 {
 	var res []float32
-	// iterar los valores de cada uno con el key, value
-	// creo que debe estar dentro de config y debe estar attach a la struct
+	for _, value := range d {
+		res = append(res, float32(value))
+	}
 	return res
 }

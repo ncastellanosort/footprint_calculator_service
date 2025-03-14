@@ -13,7 +13,6 @@ func Calculator(data *config.Answers, respch chan float32, wg *sync.WaitGroup) f
 	go CalculateFood(data, respch, wg)
 	go CalculateWaste(data, respch, wg)
 	go CalculateEnergy(data, respch, wg)
-
 	wg.Wait()
 	close(respch)
 	var footprint float32

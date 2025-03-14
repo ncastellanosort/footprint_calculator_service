@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"carbon_calculator/config"
+	"carbon_calculator/utils"
 	"encoding/json"
 	"net/http"
 	"sync"
@@ -9,6 +10,11 @@ import (
 
 type Message struct {
 	Result float32 `json:"result"`
+}
+
+type DataMessage struct {
+	Data   config.Data `json:"data"`
+	Result float32     `json:"result"`
 }
 
 func CalculatorHandler(w http.ResponseWriter, r *http.Request, respch chan float32, wg *sync.WaitGroup) {
@@ -31,18 +37,25 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, respch chan float
 
 	var answer config.Data
 	json.NewDecoder(r.Body).Decode(&answer)
-	json.NewEncoder(w).Encode(answer)
-	/* 	if err := json.NewDecoder(r.Body).Decode(&answer); err != nil {
-	   		http.Error(w, "invalid request body", http.StatusBadRequest)
-	   		return
-	   		}
-	   	   d	efer r.Body.Close()
 
-	   	   	value := calc.Calculator(&answer, respch, wg)
-	   	   	rounded_value := float32(math.Round(float64(value)*10) / 10)
+	energy := utils.AnswersToArray(answer.Energy)
+	waste := utils.AnswersToArray(answer.Waste)
+	transport := utils.AnswersToArray(answer.Transport)
+	food := utils.AnswersToArray(answer.Food)
 
-	   	   	if err := json.NewEncoder(w).Encode(Message{Result: rounded_value}); err != nil {
-	   	   		http.Error(w, "failed to encode response", http.StatusInternalServerError)
-	   	}
+	answers := config.Answers{
+		Transport: transport,
+		Energy:    energy,
+		Waste:     waste,
+		Food:      food,
+	}
+
+	json.NewEncoder(w).Encode(answers)
+	defer r.Body.Close()
+	/*
+			value := calc.Calculator(&answers, respch, wg)
+		rounded_value := float32(math.Round(float64(value)*10) / 10)
+
+			json.NewEncoder(w).Encode(DataMessage{Data: answer, Result: rounded_value})
 	*/
 }
