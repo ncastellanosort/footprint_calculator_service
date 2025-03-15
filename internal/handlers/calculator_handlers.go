@@ -38,13 +38,26 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, respch chan float
 	w.Header().Set("Content-type", "application/json")
 
 	var answer config.Data
-	json.NewDecoder(r.Body).Decode(&answer)
+	if err := json.NewDecoder(r.Body).Decode(&answer); err != nil {
+		http.Error(w, "invalid json payload", http.StatusBadRequest)
+		return
+	}
 
-	answers := utils.GetAnswers(&answer)
+	answers, err := utils.GetAnswers(&answer)
+	if err != nil {
+		http.Error(w, "failed getting answers", http.StatusInternalServerError)
+		return
+	}
 
-	value := calc.Calculator(answers, respch, wg)
+	value, err := calc.Calculator(answers, respch, wg)
+	if err != nil {
+		http.Error(w, "calculate error", http.StatusInternalServerError)
+		return
+	}
 	rounded_value := float32(math.Round(float64(value)*10) / 10)
 
-	json.NewEncoder(w).Encode(DataMessage{Data: answer, Result: rounded_value})
+	if err := json.NewEncoder(w).Encode(DataMessage{Data: answer, Result: rounded_value}); err != nil {
+		http.Error(w, "failed to encode response", http.StatusInternalServerError)
+	}
 
 }

@@ -5,7 +5,7 @@ import (
 	"sync"
 )
 
-func Calculator(data *config.Answers, respch chan float32, wg *sync.WaitGroup) float32 {
+func Calculator(data *config.Answers, respch chan float32, wg *sync.WaitGroup) (float32, error) {
 
 	wg.Add(4)
 
@@ -23,5 +23,5 @@ func Calculator(data *config.Answers, respch chan float32, wg *sync.WaitGroup) f
 		footprint += value
 	}
 
-	return footprint
+	return footprint, nil
 }

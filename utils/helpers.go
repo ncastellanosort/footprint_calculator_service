@@ -40,7 +40,7 @@ func AnswersToArray(d map[string]int, k1 string, k2 string, k3 string, k4 string
 	}
 	return res
 }
-func GetAnswers(answer *config.Data) *config.Answers {
+func GetAnswers(answer *config.Data) (*config.Answers, error) {
 
 	energy := AnswersToArray(answer.Energy, "applianceHours", "lightBulbs", "gasTanks", "hvacHours")
 	waste := AnswersToArray(answer.Waste, "trashBagsa", "foodWaste", "plasticBottles", "paperPackages")
@@ -52,5 +52,5 @@ func GetAnswers(answer *config.Data) *config.Answers {
 		Energy:    energy,
 		Waste:     waste,
 		Food:      food,
-	}
+	}, nil
 }
