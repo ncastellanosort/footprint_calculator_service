@@ -19,22 +19,33 @@ func MultiplyAnswersAndEF(answers []float32, ef []float32) float32 {
 	return res
 }
 
-func AnswersToArray(d map[string]int) []float32 {
+func AnswersToArray(d map[string]int, k1 string, k2 string, k3 string, k4 string) []float32 {
 	res := make([]float32, len(d))
-	n := 0
-	for _, value := range d {
-		res[n] = float32(value)
-		n++
+	for key, value := range d {
+		if key == k1 {
+			res[0] = float32(value)
+		}
+
+		if key == k2 {
+			res[1] = float32(value)
+		}
+
+		if key == k3 {
+			res[2] = float32(value)
+		}
+
+		if key == k4 {
+			res[3] = float32(value)
+		}
 	}
 	return res
 }
-
 func GetAnswers(answer *config.Data) *config.Answers {
 
-	energy := AnswersToArray(answer.Energy)
-	waste := AnswersToArray(answer.Waste)
-	transport := AnswersToArray(answer.Transport)
-	food := AnswersToArray(answer.Food)
+	energy := AnswersToArray(answer.Energy, "applianceHours", "lightBulbs", "gasTanks", "hvacHours")
+	waste := AnswersToArray(answer.Waste, "trashBagsa", "foodWaste", "plasticBottles", "paperPackages")
+	transport := AnswersToArray(answer.Transport, "carKm", "publicKm", "domesticFlights", "internationalFlights")
+	food := AnswersToArray(answer.Food, "redMeat", "whiteMeat", "dairy", "vegetarian")
 
 	return &config.Answers{
 		Transport: transport,
