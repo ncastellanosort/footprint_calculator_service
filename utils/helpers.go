@@ -20,14 +20,16 @@ func MultiplyAnswersAndEF(answers []float32, ef []float32) float32 {
 }
 
 func AnswersToArray(d map[string]int) []float32 {
-	var res []float32
+	res := make([]float32, len(d))
+	n := 0
 	for _, value := range d {
-		res = append(res, float32(value))
+		res[n] = float32(value)
+		n++
 	}
 	return res
 }
 
-func GetAnswers(answer config.Data) *config.Answers {
+func GetAnswers(answer *config.Data) *config.Answers {
 
 	energy := AnswersToArray(answer.Energy)
 	waste := AnswersToArray(answer.Waste)

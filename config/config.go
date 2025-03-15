@@ -5,14 +5,8 @@ type Answers struct {
 	Food      []float32 `json:"food"`
 	Energy    []float32 `json:"energy"`
 	Waste     []float32 `json:"waste"`
-} // CAMBIAR ACA LO DEL JSON
-
-type Answer struct {
-	r1 float32 `json:"r1"`
-	r2 float32 `json:"r2"`
-	r3 float32 `json:"r3"`
-	r4 float32 `json:"r4"`
 }
+
 type Data struct {
 	Date      string         `json:"date"`
 	Energy    map[string]int `json:"energy"`

@@ -40,7 +40,7 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, respch chan float
 	var answer config.Data
 	json.NewDecoder(r.Body).Decode(&answer)
 
-	answers := utils.GetAnswers(answer)
+	answers := utils.GetAnswers(&answer)
 
 	value := calc.Calculator(answers, respch, wg)
 	rounded_value := float32(math.Round(float64(value)*10) / 10)
