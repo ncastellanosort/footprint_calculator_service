@@ -19,7 +19,7 @@ type DataMessage struct {
 	Result float32     `json:"result"`
 }
 
-func CalculatorHandler(w http.ResponseWriter, r *http.Request, respch chan float32, wg *sync.WaitGroup) {
+func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan float32, wg *sync.WaitGroup, convertArrayCh chan []float32) {
 	// manage CORS
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
@@ -43,13 +43,13 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, respch chan float
 		return
 	}
 
-	answers, err := utils.GetAnswers(&answer)
+	answers, err := utils.GetAnswers(&answer, convertArrayCh, wg)
 	if err != nil {
 		http.Error(w, "failed getting answers", http.StatusInternalServerError)
 		return
 	}
 
-	value, err := calc.Calculator(answers, respch, wg)
+	value, err := calc.Calculator(answers, calculateCh, wg)
 	if err != nil {
 		http.Error(w, "calculate error", http.StatusInternalServerError)
 		return
