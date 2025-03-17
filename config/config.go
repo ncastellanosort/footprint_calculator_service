@@ -7,6 +7,11 @@ type Answers struct {
 	Waste     []float32 `json:"waste"`
 }
 
+type ArrayData struct {
+	Array []float32
+	Index int
+}
+
 type Data struct {
 	Date      string         `json:"date"`
 	Energy    map[string]int `json:"energy"`
