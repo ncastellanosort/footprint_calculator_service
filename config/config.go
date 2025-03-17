@@ -1,5 +1,45 @@
 package config
 
+type Transport struct {
+	r1      float32
+	r2      float32
+	r3      float32
+	r4      float32
+	Total   float32
+	User_id int
+	Date    string
+}
+
+type Food struct {
+	r1      float32
+	r2      float32
+	r3      float32
+	r4      float32
+	Total   float32
+	User_id int
+	Date    string
+}
+
+type Energy struct {
+	r1      float32
+	r2      float32
+	r3      float32
+	r4      float32
+	Total   float32
+	User_id int
+	Date    string
+}
+
+type Waste struct {
+	r1      float32
+	r2      float32
+	r3      float32
+	r4      float32
+	Total   float32
+	User_id int
+	Date    string
+}
+
 type Answers struct {
 	Transport []float32 `json:"transport"`
 	Food      []float32 `json:"food"`
