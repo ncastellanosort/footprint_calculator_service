@@ -16,7 +16,7 @@ func main() {
 
 	database.Connect()
 
-	err := database.DB.AutoMigrate(&config.Transport{})
+	err := database.DB.AutoMigrate(&config.Transport{}, &config.Energy{}, &config.Waste{}, &config.Food{})
 
 	if err != nil {
 		log.Fatal("Migrate err", err)

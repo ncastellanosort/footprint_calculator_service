@@ -1,43 +1,57 @@
 package config
 
+import "time"
+
 type Transport struct {
-	r1      float32
-	r2      float32
-	r3      float32
-	r4      float32
-	Total   float32
-	User_id int
-	Date    string
+	R1              float32 `gorm:"type:float"`
+	R2              float32 `gorm:"type:float"`
+	R3              float32 `gorm:"type:float"`
+	R4              float32 `gorm:"type:float"`
+	Total           float32 `gorm:"type:float"`
+	Recommendation1 string
+	Recommendation2 string
+	Recommendation3 string
+	User_id         int
+	Date            time.Time
 }
 
 type Food struct {
-	r1      float32
-	r2      float32
-	r3      float32
-	r4      float32
-	Total   float32
-	User_id int
-	Date    string
+	R1              float32 `gorm:"type:float"`
+	R2              float32 `gorm:"type:float"`
+	R3              float32 `gorm:"type:float"`
+	R4              float32 `gorm:"type:float"`
+	Total           float32 `gorm:"type:float"`
+	Recommendation1 string
+	Recommendation2 string
+	Recommendation3 string
+	User_id         int
+	Date            time.Time
 }
 
 type Energy struct {
-	r1      float32
-	r2      float32
-	r3      float32
-	r4      float32
-	Total   float32
-	User_id int
-	Date    string
+	R1              float32 `gorm:"type:float"`
+	R2              float32 `gorm:"type:float"`
+	R3              float32 `gorm:"type:float"`
+	R4              float32 `gorm:"type:float"`
+	Total           float32 `gorm:"type:float"`
+	Recommendation1 string
+	Recommendation2 string
+	Recommendation3 string
+	User_id         int
+	Date            time.Time
 }
 
 type Waste struct {
-	r1      float32
-	r2      float32
-	r3      float32
-	r4      float32
-	Total   float32
-	User_id int
-	Date    string
+	R1              float32 `gorm:"type:float"`
+	R2              float32 `gorm:"type:float"`
+	R3              float32 `gorm:"type:float"`
+	R4              float32 `gorm:"type:float"`
+	Total           float32 `gorm:"type:float"`
+	Recommendation1 string
+	Recommendation2 string
+	Recommendation3 string
+	User_id         int
+	Date            time.Time
 }
 
 type Answers struct {
