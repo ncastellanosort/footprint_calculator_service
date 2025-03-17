@@ -1,5 +1,5 @@
 # Carbon Footprint Calculator Service in Go
-### Run in cmd:
+##### Run:
 ```
 go get -u gorm.io/gorm
 ```
