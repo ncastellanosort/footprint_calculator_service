@@ -71,6 +71,8 @@ func GetAnswers(answer *config.Data, convertArrayCh chan config.ArrayData, wg *s
 		return nil, fmt.Errorf("there are not 4 lists, are %d", len(r))
 	}
 
+	// armar el struct de cada uno y enviarlo a la db
+
 	return &config.Answers{
 		Transport: r[0],
 		Energy:    r[1],

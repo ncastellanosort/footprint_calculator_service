@@ -50,10 +50,12 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan 
 	}
 
 	value, err := calc.Calculator(answers, calculateCh, wg)
+
 	if err != nil {
 		http.Error(w, "calculate error", http.StatusInternalServerError)
 		return
 	}
+
 	rounded_value := float32(math.Round(float64(value)*10) / 10)
 
 	if err := json.NewEncoder(w).Encode(DataMessage{Data: answer, Result: rounded_value}); err != nil {
