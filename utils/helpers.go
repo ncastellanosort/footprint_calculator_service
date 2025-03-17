@@ -74,10 +74,10 @@ func GetAnswers(answer *config.Data, convertArrayCh chan config.ArrayData, wg *s
 	// armar el struct de cada uno y enviarlo a la db
 
 	return &config.Answers{
-		Transport: r[0],
-		Energy:    r[1],
-		Waste:     r[2],
-		Food:      r[3],
+		Transport: r[2],
+		Energy:    r[0],
+		Waste:     r[3],
+		Food:      r[1],
 	}, nil
 
 }
