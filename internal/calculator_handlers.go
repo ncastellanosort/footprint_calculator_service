@@ -10,15 +10,6 @@ import (
 	"sync"
 )
 
-type Message struct {
-	Result float32 `json:"result"`
-}
-
-type DataMessage struct {
-	Data   types.Data `json:"data"`
-	Result float32    `json:"result"`
-}
-
 func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan float32, wg *sync.WaitGroup, convertArrayCh chan types.ArrayData) {
 	// manage CORS
 	w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -58,7 +49,7 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan 
 
 	rounded_value := float32(math.Round(float64(value)*10) / 10)
 
-	if err := json.NewEncoder(w).Encode(DataMessage{Data: answer, Result: rounded_value}); err != nil {
+	if err := json.NewEncoder(w).Encode(types.DataMessage{Data: answer, Result: rounded_value}); err != nil {
 		http.Error(w, "failed to encode response", http.StatusInternalServerError)
 	}
 

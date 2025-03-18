@@ -2,6 +2,11 @@ package types
 
 import "time"
 
+type DataMessage struct {
+	Data   Data    `json:"data"`
+	Result float32 `json:"result"`
+}
+
 type Transport struct {
 	CarKM                float32 `gorm:"type:float"`
 	PublicKm             float32 `gorm:"type:float"`
