@@ -1,6 +1,8 @@
 package types
 
-import "time"
+import (
+	"gorm.io/gorm"
+)
 
 type Answers struct {
 	Transport []float32 `json:"transport"`
@@ -40,41 +42,41 @@ var EmisionFactors = struct {
 }
 
 type Transport struct {
-	CarKM                float32 `gorm:"type:float"`
-	PublicKm             float32 `gorm:"type:float"`
-	DomesticFlights      float32 `gorm:"type:float"`
-	InternationalFlights float32 `gorm:"type:float"`
-	Total                float32 `gorm:"type:float"`
+	gorm.Model
+	CarKM                float32
+	PublicKm             float32
+	DomesticFlights      float32
+	InternationalFlights float32
+	Total                float32
 	User_id              int
-	Date                 time.Time
 }
 
 type Food struct {
-	RedMeat    float32 `gorm:"type:float"`
-	WhiteMeat  float32 `gorm:"type:float"`
-	Dairy      float32 `gorm:"type:float"`
-	Vegetarian float32 `gorm:"type:float"`
-	Total      float32 `gorm:"type:float"`
+	gorm.Model
+	RedMeat    float32
+	WhiteMeat  float32
+	Dairy      float32
+	Vegetarian float32
+	Total      float32
 	User_id    int
-	Date       time.Time
 }
 
 type Energy struct {
-	ApplianceHours float32 `gorm:"type:float"`
-	LightBulbs     float32 `gorm:"type:float"`
-	GasTanks       float32 `gorm:"type:float"`
-	HvacHours      float32 `gorm:"type:float"`
-	Total          float32 `gorm:"type:float"`
+	gorm.Model
+	ApplianceHours float32
+	LightBulbs     float32
+	GasTanks       float32
+	HvacHours      float32
+	Total          float32
 	User_id        int
-	Date           time.Time
 }
 
 type Waste struct {
-	TrashBags      float32 `gorm:"type:float"`
-	FoodWaste      float32 `gorm:"type:float"`
-	PlasticBottles float32 `gorm:"type:float"`
-	PaperPackages  float32 `gorm:"type:float"`
-	Total          float32 `gorm:"type:float"`
+	gorm.Model
+	TrashBags      float32
+	FoodWaste      float32
+	PlasticBottles float32
+	PaperPackages  float32
+	Total          float32
 	User_id        int
-	Date           time.Time
 }

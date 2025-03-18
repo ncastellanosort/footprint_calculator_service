@@ -2,11 +2,9 @@ package utils
 
 import (
 	"carbon_calculator/types"
-	"log"
-	"time"
-
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
 )
 
 var dsn = "host=localhost user=postgres password=root dbname=carbon_results port=5432 sslmode=disable"
@@ -25,8 +23,6 @@ func Connect() {
 
 func SaveAnswersDB(r map[int][]float32) error {
 
-	now := time.Now()
-
 	transport := types.Transport{
 		CarKM:                r[2][0],
 		PublicKm:             r[2][1],
@@ -34,7 +30,6 @@ func SaveAnswersDB(r map[int][]float32) error {
 		InternationalFlights: r[2][3],
 		Total:                SumAnswers(r[2]),
 		User_id:              10,
-		Date:                 now,
 	}
 
 	food := types.Food{
@@ -44,7 +39,6 @@ func SaveAnswersDB(r map[int][]float32) error {
 		Vegetarian: r[1][3],
 		Total:      SumAnswers(r[1]),
 		User_id:    10,
-		Date:       now,
 	}
 
 	waste := types.Waste{
@@ -54,7 +48,6 @@ func SaveAnswersDB(r map[int][]float32) error {
 		PaperPackages:  r[3][3],
 		Total:          SumAnswers(r[3]),
 		User_id:        10,
-		Date:           now,
 	}
 
 	energy := types.Energy{
@@ -64,7 +57,6 @@ func SaveAnswersDB(r map[int][]float32) error {
 		HvacHours:      r[0][3],
 		Total:          SumAnswers(r[0]),
 		User_id:        10,
-		Date:           now,
 	}
 
 	DB.Create(&transport)
