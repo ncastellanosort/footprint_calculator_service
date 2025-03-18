@@ -61,6 +61,59 @@ func AnswersToArray(pos int, d map[string]int, k1 string, k2 string, k3 string, 
 	convertArrayCh <- arr
 }
 
+func SaveAnswersDB(r map[int][]float32) error {
+
+	now := time.Now()
+
+	transport := config.Transport{
+		CarKM:                r[2][0],
+		PublicKm:             r[2][1],
+		DomesticFlights:      r[2][2],
+		InternationalFlights: r[2][3],
+		Total:                SumAnswers(r[2]),
+		User_id:              10,
+		Date:                 now,
+	}
+
+	food := config.Food{
+		RedMeat:    r[1][0],
+		WhiteMeat:  r[1][1],
+		Dairy:      r[1][2],
+		Vegetarian: r[1][3],
+		Total:      SumAnswers(r[1]),
+		User_id:    10,
+		Date:       now,
+	}
+
+	waste := config.Waste{
+		TrashBags:      r[3][0],
+		FoodWaste:      r[3][1],
+		PlasticBottles: r[3][2],
+		PaperPackages:  r[3][3],
+		Total:          SumAnswers(r[3]),
+		User_id:        10,
+		Date:           now,
+	}
+
+	energy := config.Energy{
+		ApplianceHours: r[0][0],
+		LightBulbs:     r[0][1],
+		GasTanks:       r[0][2],
+		HvacHours:      r[0][3],
+		Total:          SumAnswers(r[0]),
+		User_id:        10,
+		Date:           now,
+	}
+
+	database.DB.Create(&transport)
+	database.DB.Create(&waste)
+	database.DB.Create(&energy)
+	database.DB.Create(&food)
+
+	return nil
+
+}
+
 func GetAnswers(answer *config.Data, convertArrayCh chan config.ArrayData, wg *sync.WaitGroup) (*config.Answers, error) {
 
 	wg.Add(4)
@@ -83,50 +136,10 @@ func GetAnswers(answer *config.Data, convertArrayCh chan config.ArrayData, wg *s
 		return nil, fmt.Errorf("there are not 4 lists, are %d", len(r))
 	}
 
-	transport := config.Transport{
-		CarKM:                r[2][0],
-		PublicKm:             r[2][1],
-		DomesticFlights:      r[2][2],
-		InternationalFlights: r[2][3],
-		Total:                SumAnswers(r[2]),
-		User_id:              10,
-		Date:                 time.Now(),
+	err := SaveAnswersDB(r)
+	if err != nil {
+		log.Fatal("error saving answers in db")
 	}
-
-	food := config.Food{
-		RedMeat:    r[1][0],
-		WhiteMeat:  r[1][1],
-		Dairy:      r[1][2],
-		Vegetarian: r[1][3],
-		Total:      SumAnswers(r[1]),
-		User_id:    10,
-		Date:       time.Now(),
-	}
-
-	waste := config.Waste{
-		TrashBags:      r[3][0],
-		FoodWaste:      r[3][1],
-		PlasticBottles: r[3][2],
-		PaperPackages:  r[3][3],
-		Total:          SumAnswers(r[3]),
-		User_id:        10,
-		Date:           time.Now(),
-	}
-
-	energy := config.Energy{
-		ApplianceHours: r[0][0],
-		LightBulbs:     r[0][1],
-		GasTanks:       r[0][2],
-		HvacHours:      r[0][3],
-		Total:          SumAnswers(r[0]),
-		User_id:        10,
-		Date:           time.Now(),
-	}
-
-	database.DB.Create(&transport)
-	database.DB.Create(&waste)
-	database.DB.Create(&energy)
-	database.DB.Create(&food)
 
 	return &config.Answers{
 		Transport: r[2],
