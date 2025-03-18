@@ -93,7 +93,40 @@ func GetAnswers(answer *config.Data, convertArrayCh chan config.ArrayData, wg *s
 		Date:                 time.Now(),
 	}
 
+	food := config.Food{
+		RedMeat:    r[1][0],
+		WhiteMeat:  r[1][1],
+		Dairy:      r[1][2],
+		Vegetarian: r[1][3],
+		Total:      SumAnswers(r[1]),
+		User_id:    10,
+		Date:       time.Now(),
+	}
+
+	waste := config.Waste{
+		TrashBags:      r[3][0],
+		FoodWaste:      r[3][1],
+		PlasticBottles: r[3][2],
+		PaperPackages:  r[3][3],
+		Total:          SumAnswers(r[3]),
+		User_id:        10,
+		Date:           time.Now(),
+	}
+
+	energy := config.Energy{
+		ApplianceHours: r[0][0],
+		LightBulbs:     r[0][1],
+		GasTanks:       r[0][2],
+		HvacHours:      r[0][3],
+		Total:          SumAnswers(r[0]),
+		User_id:        10,
+		Date:           time.Now(),
+	}
+
 	database.DB.Create(&transport)
+	database.DB.Create(&waste)
+	database.DB.Create(&energy)
+	database.DB.Create(&food)
 
 	return &config.Answers{
 		Transport: r[2],

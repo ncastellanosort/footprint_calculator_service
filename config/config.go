@@ -33,13 +33,13 @@ type Energy struct {
 }
 
 type Waste struct {
-	R1      float32 `gorm:"type:float"`
-	R2      float32 `gorm:"type:float"`
-	R3      float32 `gorm:"type:float"`
-	R4      float32 `gorm:"type:float"`
-	Total   float32 `gorm:"type:float"`
-	User_id int
-	Date    time.Time
+	TrashBags      float32 `gorm:"type:float"`
+	FoodWaste      float32 `gorm:"type:float"`
+	PlasticBottles float32 `gorm:"type:float"`
+	PaperPackages  float32 `gorm:"type:float"`
+	Total          float32 `gorm:"type:float"`
+	User_id        int
+	Date           time.Time
 }
 
 type Answers struct {
