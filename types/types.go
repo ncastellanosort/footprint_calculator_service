@@ -24,7 +24,7 @@ type Data struct {
 	Waste     map[string]int `json:"waste"`
 }
 
-type DataMessage struct {
+type DataResponse struct {
 	Data   Data    `json:"data"`
 	Result float32 `json:"result"`
 }
