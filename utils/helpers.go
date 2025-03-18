@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"sync"
-	"time"
 )
 
 func MultiplyAnswersAndEF(answers []float32, ef []float32) float32 {
@@ -58,59 +57,6 @@ func AnswersToArray(pos int, d map[string]int, k1 string, k2 string, k3 string, 
 		Index: pos,
 	}
 	convertArrayCh <- arr
-}
-
-func SaveAnswersDB(r map[int][]float32) error {
-
-	now := time.Now()
-
-	transport := types.Transport{
-		CarKM:                r[2][0],
-		PublicKm:             r[2][1],
-		DomesticFlights:      r[2][2],
-		InternationalFlights: r[2][3],
-		Total:                SumAnswers(r[2]),
-		User_id:              10,
-		Date:                 now,
-	}
-
-	food := types.Food{
-		RedMeat:    r[1][0],
-		WhiteMeat:  r[1][1],
-		Dairy:      r[1][2],
-		Vegetarian: r[1][3],
-		Total:      SumAnswers(r[1]),
-		User_id:    10,
-		Date:       now,
-	}
-
-	waste := types.Waste{
-		TrashBags:      r[3][0],
-		FoodWaste:      r[3][1],
-		PlasticBottles: r[3][2],
-		PaperPackages:  r[3][3],
-		Total:          SumAnswers(r[3]),
-		User_id:        10,
-		Date:           now,
-	}
-
-	energy := types.Energy{
-		ApplianceHours: r[0][0],
-		LightBulbs:     r[0][1],
-		GasTanks:       r[0][2],
-		HvacHours:      r[0][3],
-		Total:          SumAnswers(r[0]),
-		User_id:        10,
-		Date:           now,
-	}
-
-	DB.Create(&transport)
-	DB.Create(&waste)
-	DB.Create(&energy)
-	DB.Create(&food)
-
-	return nil
-
 }
 
 func GetAnswers(answer *types.Data, convertArrayCh chan types.ArrayData, wg *sync.WaitGroup) (*types.Answers, error) {
