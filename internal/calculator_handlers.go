@@ -1,8 +1,8 @@
-package handlers
+package internal
 
 import (
-	"carbon_calculator/config"
 	"carbon_calculator/internal/calc"
+	"carbon_calculator/types"
 	"carbon_calculator/utils"
 	"encoding/json"
 	"math"
@@ -15,11 +15,11 @@ type Message struct {
 }
 
 type DataMessage struct {
-	Data   config.Data `json:"data"`
-	Result float32     `json:"result"`
+	Data   types.Data `json:"data"`
+	Result float32    `json:"result"`
 }
 
-func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan float32, wg *sync.WaitGroup, convertArrayCh chan config.ArrayData) {
+func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan float32, wg *sync.WaitGroup, convertArrayCh chan types.ArrayData) {
 	// manage CORS
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
@@ -37,7 +37,7 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan 
 	defer r.Body.Close()
 	w.Header().Set("Content-type", "application/json")
 
-	var answer config.Data
+	var answer types.Data
 	if err := json.NewDecoder(r.Body).Decode(&answer); err != nil {
 		http.Error(w, "invalid json payload", http.StatusBadRequest)
 		return

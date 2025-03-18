@@ -1,8 +1,7 @@
-package routes
+package internal
 
 import (
-	"carbon_calculator/config"
-	"carbon_calculator/internal/handlers"
+	"carbon_calculator/types"
 	"net/http"
 	"sync"
 )
@@ -11,9 +10,9 @@ func SetupCalculatorRoutes(wg *sync.WaitGroup) {
 
 	http.HandleFunc("/calculate", func(w http.ResponseWriter, r *http.Request) {
 		calculateCh := make(chan float32, 4)
-		arrayCh := make(chan config.ArrayData, 4)
+		arrayCh := make(chan types.ArrayData, 4)
 
-		handlers.CalculatorHandler(w, r, calculateCh, wg, arrayCh)
+		CalculatorHandler(w, r, calculateCh, wg, arrayCh)
 	})
 
 }

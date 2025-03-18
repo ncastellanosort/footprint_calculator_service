@@ -1,8 +1,7 @@
 package utils
 
 import (
-	"carbon_calculator/config"
-	"carbon_calculator/internal/database"
+	"carbon_calculator/types"
 	"fmt"
 	"log"
 	"sync"
@@ -33,7 +32,7 @@ func SumAnswers(answers []float32) float32 {
 	return n
 }
 
-func AnswersToArray(pos int, d map[string]int, k1 string, k2 string, k3 string, k4 string, convertArrayCh chan config.ArrayData, wg *sync.WaitGroup) {
+func AnswersToArray(pos int, d map[string]int, k1 string, k2 string, k3 string, k4 string, convertArrayCh chan types.ArrayData, wg *sync.WaitGroup) {
 	defer wg.Done()
 	res := make([]float32, len(d))
 	for key, value := range d {
@@ -54,7 +53,7 @@ func AnswersToArray(pos int, d map[string]int, k1 string, k2 string, k3 string, 
 		}
 	}
 
-	arr := config.ArrayData{
+	arr := types.ArrayData{
 		Array: res,
 		Index: pos,
 	}
@@ -65,7 +64,7 @@ func SaveAnswersDB(r map[int][]float32) error {
 
 	now := time.Now()
 
-	transport := config.Transport{
+	transport := types.Transport{
 		CarKM:                r[2][0],
 		PublicKm:             r[2][1],
 		DomesticFlights:      r[2][2],
@@ -75,7 +74,7 @@ func SaveAnswersDB(r map[int][]float32) error {
 		Date:                 now,
 	}
 
-	food := config.Food{
+	food := types.Food{
 		RedMeat:    r[1][0],
 		WhiteMeat:  r[1][1],
 		Dairy:      r[1][2],
@@ -85,7 +84,7 @@ func SaveAnswersDB(r map[int][]float32) error {
 		Date:       now,
 	}
 
-	waste := config.Waste{
+	waste := types.Waste{
 		TrashBags:      r[3][0],
 		FoodWaste:      r[3][1],
 		PlasticBottles: r[3][2],
@@ -95,7 +94,7 @@ func SaveAnswersDB(r map[int][]float32) error {
 		Date:           now,
 	}
 
-	energy := config.Energy{
+	energy := types.Energy{
 		ApplianceHours: r[0][0],
 		LightBulbs:     r[0][1],
 		GasTanks:       r[0][2],
@@ -105,16 +104,16 @@ func SaveAnswersDB(r map[int][]float32) error {
 		Date:           now,
 	}
 
-	database.DB.Create(&transport)
-	database.DB.Create(&waste)
-	database.DB.Create(&energy)
-	database.DB.Create(&food)
+	DB.Create(&transport)
+	DB.Create(&waste)
+	DB.Create(&energy)
+	DB.Create(&food)
 
 	return nil
 
 }
 
-func GetAnswers(answer *config.Data, convertArrayCh chan config.ArrayData, wg *sync.WaitGroup) (*config.Answers, error) {
+func GetAnswers(answer *types.Data, convertArrayCh chan types.ArrayData, wg *sync.WaitGroup) (*types.Answers, error) {
 
 	wg.Add(4)
 
@@ -141,7 +140,7 @@ func GetAnswers(answer *config.Data, convertArrayCh chan config.ArrayData, wg *s
 		log.Fatal("error saving answers in db")
 	}
 
-	return &config.Answers{
+	return &types.Answers{
 		Transport: r[2],
 		Energy:    r[0],
 		Waste:     r[3],

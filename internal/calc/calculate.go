@@ -1,11 +1,11 @@
 package calc
 
 import (
-	"carbon_calculator/config"
+	"carbon_calculator/types"
 	"sync"
 )
 
-func Calculator(data *config.Answers, respch chan float32, wg *sync.WaitGroup) (float32, error) {
+func Calculator(data *types.Answers, respch chan float32, wg *sync.WaitGroup) (float32, error) {
 
 	wg.Add(4)
 

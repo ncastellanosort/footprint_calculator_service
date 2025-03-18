@@ -1,9 +1,9 @@
 package main
 
 import (
-	"carbon_calculator/config"
-	"carbon_calculator/internal/database"
-	"carbon_calculator/internal/routes"
+	"carbon_calculator/internal"
+	"carbon_calculator/types"
+	"carbon_calculator/utils"
 	"fmt"
 	"log"
 	"net/http"
@@ -14,9 +14,9 @@ const PORT int = 8080
 
 func main() {
 
-	database.Connect()
+	utils.Connect()
 
-	err := database.DB.AutoMigrate(&config.Transport{}, &config.Energy{}, &config.Waste{}, &config.Food{})
+	err := utils.DB.AutoMigrate(&types.Transport{}, &types.Energy{}, &types.Waste{}, &types.Food{})
 
 	if err != nil {
 		log.Fatal("Migrate err", err)
@@ -24,7 +24,7 @@ func main() {
 	fmt.Println(fmt.Sprintf("server running on http://localhost:%d", PORT))
 	wg := &sync.WaitGroup{}
 
-	routes.SetupCalculatorRoutes(wg)
+	internal.SetupCalculatorRoutes(wg)
 
 	err = http.ListenAndServe(fmt.Sprintf(":%d", PORT), nil)
 	if err != nil {
