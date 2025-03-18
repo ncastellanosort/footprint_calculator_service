@@ -8,7 +8,7 @@ import (
 
 func SetupCalculatorRoutes(wg *sync.WaitGroup) {
 
-	http.HandleFunc("/calculate", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/carbon_calculator_service", func(w http.ResponseWriter, r *http.Request) {
 		calculateCh := make(chan float32, 4)
 		arrayCh := make(chan types.ArrayData, 4)
 
