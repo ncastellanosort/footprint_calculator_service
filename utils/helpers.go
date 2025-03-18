@@ -2,9 +2,11 @@ package utils
 
 import (
 	"carbon_calculator/config"
+	"carbon_calculator/internal/database"
 	"fmt"
 	"log"
 	"sync"
+	"time"
 )
 
 func MultiplyAnswersAndEF(answers []float32, ef []float32) float32 {
@@ -19,6 +21,16 @@ func MultiplyAnswersAndEF(answers []float32, ef []float32) float32 {
 	}
 
 	return res
+}
+
+func SumAnswers(answers []float32) float32 {
+	var n float32
+
+	for _, value := range answers {
+		n += float32(value)
+	}
+
+	return n
 }
 
 func AnswersToArray(pos int, d map[string]int, k1 string, k2 string, k3 string, k4 string, convertArrayCh chan config.ArrayData, wg *sync.WaitGroup) {
@@ -71,7 +83,17 @@ func GetAnswers(answer *config.Data, convertArrayCh chan config.ArrayData, wg *s
 		return nil, fmt.Errorf("there are not 4 lists, are %d", len(r))
 	}
 
-	// armar el struct de cada uno y enviarlo a la db
+	transport := config.Transport{
+		CarKM:                r[2][0],
+		PublicKm:             r[2][1],
+		DomesticFlights:      r[2][2],
+		InternationalFlights: r[2][3],
+		Total:                SumAnswers(r[2]),
+		User_id:              10,
+		Date:                 time.Now(),
+	}
+
+	database.DB.Create(&transport)
 
 	return &config.Answers{
 		Transport: r[2],

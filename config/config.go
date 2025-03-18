@@ -3,33 +3,33 @@ package config
 import "time"
 
 type Transport struct {
-	R1      float32 `gorm:"type:float"`
-	R2      float32 `gorm:"type:float"`
-	R3      float32 `gorm:"type:float"`
-	R4      float32 `gorm:"type:float"`
-	Total   float32 `gorm:"type:float"`
-	User_id int
-	Date    time.Time
+	CarKM                float32 `gorm:"type:float"`
+	PublicKm             float32 `gorm:"type:float"`
+	DomesticFlights      float32 `gorm:"type:float"`
+	InternationalFlights float32 `gorm:"type:float"`
+	Total                float32 `gorm:"type:float"`
+	User_id              int
+	Date                 time.Time
 }
 
 type Food struct {
-	R1      float32 `gorm:"type:float"`
-	R2      float32 `gorm:"type:float"`
-	R3      float32 `gorm:"type:float"`
-	R4      float32 `gorm:"type:float"`
-	Total   float32 `gorm:"type:float"`
-	User_id int
-	Date    time.Time
+	RedMeat    float32 `gorm:"type:float"`
+	WhiteMeat  float32 `gorm:"type:float"`
+	Dairy      float32 `gorm:"type:float"`
+	Vegetarian float32 `gorm:"type:float"`
+	Total      float32 `gorm:"type:float"`
+	User_id    int
+	Date       time.Time
 }
 
 type Energy struct {
-	R1      float32 `gorm:"type:float"`
-	R2      float32 `gorm:"type:float"`
-	R3      float32 `gorm:"type:float"`
-	R4      float32 `gorm:"type:float"`
-	Total   float32 `gorm:"type:float"`
-	User_id int
-	Date    time.Time
+	ApplianceHours float32 `gorm:"type:float"`
+	LightBulbs     float32 `gorm:"type:float"`
+	GasTanks       float32 `gorm:"type:float"`
+	HvacHours      float32 `gorm:"type:float"`
+	Total          float32 `gorm:"type:float"`
+	User_id        int
+	Date           time.Time
 }
 
 type Waste struct {
