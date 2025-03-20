@@ -13,6 +13,7 @@ import (
 
 func Test_calculator_handler(t *testing.T) {
 
+	// start the db connection
 	utils.Connect()
 
 	ch1 := make(chan float32, 4)
@@ -56,10 +57,6 @@ func Test_calculator_handler(t *testing.T) {
 	CalculatorHandler(w, r, ch1, wg, ch2)
 
 	defer r.Body.Close()
-
-	// body format
-	// method
-	// expected response value
 
 	if w.Result().StatusCode != http.StatusOK {
 		t.Errorf("expected %d got %d", http.StatusOK, w.Result().StatusCode)
