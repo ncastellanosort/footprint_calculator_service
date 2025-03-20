@@ -49,6 +49,8 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan 
 
 	rounded_value := float32(math.Round(float64(value)*10) / 10)
 
+	w.WriteHeader(http.StatusOK)
+
 	if err := json.NewEncoder(w).Encode(types.DataResponse{Data: answer, Result: rounded_value}); err != nil {
 		http.Error(w, "failed to encode response", http.StatusInternalServerError)
 	}
