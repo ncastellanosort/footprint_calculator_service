@@ -2,15 +2,25 @@ package utils
 
 import (
 	"carbon_calculator/types"
+	"log"
+	"os"
+
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
 )
 
-var dsn = "host=localhost user=postgres password=root dbname=carbon_results port=5432 sslmode=disable"
 var DB *gorm.DB
 
 func Connect() {
+	e := godotenv.Load()
+
+	if e != nil {
+		log.Fatal("err getting env", e)
+	}
+
+	dsn := os.Getenv("DATABASE_URL")
+
 	var err error
 
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
