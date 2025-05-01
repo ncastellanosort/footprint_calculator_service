@@ -4,6 +4,7 @@ import (
 	"carbon_calculator/types"
 	"log"
 	"os"
+	"sync"
 
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
@@ -19,7 +20,7 @@ func Connect() {
 		log.Fatal("err getting env", e)
 	}
 
-	dsn := os.Getenv("DATABASE_URL")
+	dsn := os.Getenv("AWS_RDS_URL")
 
 	var err error
 
@@ -32,6 +33,7 @@ func Connect() {
 }
 
 func SaveAnswersDB(r map[int][]float32) error {
+	var wg sync.WaitGroup
 
 	transport := types.Transport{
 		CarKM:                r[2][0],
@@ -69,11 +71,18 @@ func SaveAnswersDB(r map[int][]float32) error {
 		User_id:        10,
 	}
 
-	DB.Create(&transport)
-	DB.Create(&waste)
-	DB.Create(&energy)
-	DB.Create(&food)
+	entities := []interface{}{&transport, &waste, &energy, &food}
 
+	for _, entity := range entities {
+		wg.Add(1)
+		go func(e interface{}){
+			defer wg.Done()
+			DB.Create(e)
+		}(entity)
+	}
+
+	wg.Wait()
+	
 	return nil
 
 }
