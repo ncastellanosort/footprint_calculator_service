@@ -8,8 +8,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-
-func Validate_token(token_str string) (bool) {
+func Validate_token(token_str string) bool {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("err loading env", err)
@@ -32,4 +31,3 @@ func Validate_token(token_str string) (bool) {
 
 	return true
 }
-
