@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"carbon_calculator/internal/auth"
 	"carbon_calculator/internal/calc"
 	"carbon_calculator/types"
 	"carbon_calculator/utils"
@@ -27,6 +28,23 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan 
 
 	defer r.Body.Close()
 	w.Header().Set("Content-type", "application/json")
+
+	token := r.Header.Get("Authorization")
+
+	valid := auth.Validate_token(token)
+
+	/*
+
+	logeado: vue -> miguel -> token Bearer <token> ->  go logeado -> guarda en bd 
+	-> envia en post al vue con token
+
+	no logeado: vue -> miguel -> token null -> go no logeado -> envia post al vue
+
+	*/
+
+	if valid {
+	}
+
 
 	var answer types.Data
 	if err := json.NewDecoder(r.Body).Decode(&answer); err != nil {
