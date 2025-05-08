@@ -9,3 +9,6 @@ go get -u gorm.io/driver/postgres
 ```
 go get github.com/joho/godotenv
 ```
+```
+go get -u github.com/golang-jwt/jwt/v4
+```
