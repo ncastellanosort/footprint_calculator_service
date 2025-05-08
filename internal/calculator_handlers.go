@@ -35,42 +35,69 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan 
 
 	/*
 
-	logeado: vue -> miguel -> token Bearer <token> ->  go logeado -> guarda en bd 
-	-> envia en post al vue con token
+		logeado: vue -> miguel -> token Bearer <token> ->  go logeado -> guarda en bd
+		-> envia en post al vue con token
 
-	no logeado: vue -> miguel -> token null -> go no logeado -> envia post al vue
+		no logeado: vue -> miguel -> token null -> go no logeado -> envia post al vue
 
 	*/
 
-	if valid {
-	}
-
-
 	var answer types.Data
+
 	if err := json.NewDecoder(r.Body).Decode(&answer); err != nil {
 		http.Error(w, "invalid json payload", http.StatusBadRequest)
 		return
 	}
 
-	answers, err := utils.GetAnswers(&answer, convertArrayCh, wg)
-	if err != nil {
-		http.Error(w, "failed getting answers", http.StatusInternalServerError)
-		return
+	// user logged
+	if valid {
+
+		logged_answers, err := utils.GetAnswers(true, &answer, convertArrayCh, wg)
+		if err != nil {
+			http.Error(w, "failed getting answers", http.StatusInternalServerError)
+			return
+		}
+
+		logged_value, err := calc.Calculator(logged_answers, calculateCh, wg)
+
+		if err != nil {
+			http.Error(w, "calculate error", http.StatusInternalServerError)
+			return
+		}
+
+		rounded_value := float32(math.Round(float64(logged_value)*10) / 10)
+
+		w.WriteHeader(http.StatusOK)
+
+		if err := json.NewEncoder(w).Encode(types.DataResponse{Data: answer, Result: rounded_value}); err != nil {
+			http.Error(w, "failed to encode response", http.StatusInternalServerError)
+		}
+
+		// post data to vuejs endpoint
+	} else {
+
+		// user not logged
+		not_logged_answers, err := utils.GetAnswers(false, &answer, convertArrayCh, wg)
+
+		if err != nil {
+			http.Error(w, "failed getting answers", http.StatusInternalServerError)
+			return
+		}
+
+		not_logged_value, err := calc.Calculator(not_logged_answers, calculateCh, wg)
+
+		if err != nil {
+			http.Error(w, "calculate error", http.StatusInternalServerError)
+			return
+		}
+
+		rounded_value := float32(math.Round(float64(not_logged_value)*10) / 10)
+
+		w.WriteHeader(http.StatusOK)
+
+		if err := json.NewEncoder(w).Encode(types.DataResponse{Data: answer, Result: rounded_value}); err != nil {
+			http.Error(w, "failed to encode response", http.StatusInternalServerError)
+		}
+		// post data to vuejs endpoint
 	}
-
-	value, err := calc.Calculator(answers, calculateCh, wg)
-
-	if err != nil {
-		http.Error(w, "calculate error", http.StatusInternalServerError)
-		return
-	}
-
-	rounded_value := float32(math.Round(float64(value)*10) / 10)
-
-	w.WriteHeader(http.StatusOK)
-
-	if err := json.NewEncoder(w).Encode(types.DataResponse{Data: answer, Result: rounded_value}); err != nil {
-		http.Error(w, "failed to encode response", http.StatusInternalServerError)
-	}
-
 }
