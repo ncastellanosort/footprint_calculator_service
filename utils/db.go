@@ -75,15 +75,14 @@ func SaveAnswersDB(r map[int][]float32) error {
 
 	for _, entity := range entities {
 		wg.Add(1)
-		go func(e interface{}){
+		go func(e interface{}) {
 			defer wg.Done()
 			DB.Create(e)
 		}(entity)
 	}
 
 	wg.Wait()
-	
+
 	return nil
 
 }
-

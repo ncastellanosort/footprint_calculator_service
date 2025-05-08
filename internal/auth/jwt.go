@@ -8,7 +8,17 @@ import (
 	"github.com/joho/godotenv"
 )
 
+func Extract_token(authHeader string) string {
+    const prefix = "Bearer "
+    if len(authHeader) > len(prefix) && authHeader[:len(prefix)] == prefix {
+        return authHeader[len(prefix):]
+    }
+    return authHeader 
+}
+
+
 func Validate_token(token_str string) bool {
+
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("err loading env", err)
@@ -20,7 +30,9 @@ func Validate_token(token_str string) bool {
 		return false
 	}
 
-	token, err := jwt.Parse(token_str, func(token *jwt.Token) (interface{}, error) {
+	raw_token := Extract_token(token_str)
+
+	token, err := jwt.Parse(raw_token, func(token *jwt.Token) (interface{}, error) {
 		return []byte(key), nil
 	})
 
