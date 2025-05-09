@@ -16,7 +16,7 @@ func main() {
 
 	if os.Getenv("ENV") != "production" {
 		if err := godotenv.Load(); err != nil {
-			log.Println("No .env file found, assuming production env")
+			log.Println("assuming production env")
 		}
 	}
 
