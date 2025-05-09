@@ -1,6 +1,6 @@
 # Carbon Footprint Calculator Service in Go
 ### Run:
-db conection
+db connection
 ```
 go get -u gorm.io/gorm
 ```
