@@ -1,10 +1,16 @@
 package utils
 
 import (
+	"bytes"
 	"carbon_calculator/types"
+	"encoding/json"
 	"fmt"
 	"log"
+	"net/http"
+	"os"
 	"sync"
+
+	"github.com/joho/godotenv"
 )
 
 func MultiplyAnswersAndEF(answers []float32, ef []float32) float32 {
@@ -104,3 +110,31 @@ func GetAnswers(logged bool, answer *types.Data, convertArrayCh chan types.Array
 		}, nil
 	}
 }
+
+func PostData(data types.DataResponse, token string) *http.Response {
+	b, err := json.Marshal(data)
+	if err != nil {
+		log.Fatalf("err encoding json: %w", err)
+	}
+
+	url := os.Getenv("VUE_URL")
+	if url == "" {
+		log.Fatalf("err loading env")
+	}
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(b))
+	if err != nil {
+		log.Fatalf("err creating request %w", err)
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Authorization", token)
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Fatalf("err making post %w", err)
+	}
+
+	return resp
+}
+

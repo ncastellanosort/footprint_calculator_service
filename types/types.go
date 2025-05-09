@@ -4,6 +4,11 @@ import (
 	"gorm.io/gorm"
 )
 
+type Message struct {
+	Status int `json:"status"`
+	Info string `json:"info"`
+}
+
 type Answers struct {
 	Transport []float32 `json:"transport"`
 	Food      []float32 `json:"food"`
