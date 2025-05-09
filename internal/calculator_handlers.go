@@ -27,6 +27,7 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan 
 	}
 
 	defer r.Body.Close()
+
 	w.Header().Set("Content-type", "application/json")
 
 	token := r.Header.Get("Authorization")
@@ -69,11 +70,16 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan 
 
 		w.WriteHeader(http.StatusOK)
 
-		if err := json.NewEncoder(w).Encode(types.DataResponse{Data: answer, Result: rounded_value}); err != nil {
-			http.Error(w, "failed to encode response", http.StatusInternalServerError)
+		res := utils.PostData(types.DataResponse{Data: answer, Result: rounded_value}, token)
+
+		defer res.Body.Close()
+
+		message := types.Message{Status:res.StatusCode, Info: "data sent"}
+
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			http.Error(w, "failed sending data", http.StatusInternalServerError)
 		}
 
-		// post data to vuejs endpoint
 	} else {
 
 		// user not logged
@@ -98,6 +104,16 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan 
 		if err := json.NewEncoder(w).Encode(types.DataResponse{Data: answer, Result: rounded_value}); err != nil {
 			http.Error(w, "failed to encode response", http.StatusInternalServerError)
 		}
-		// post data to vuejs endpoint
+
+		res := utils.PostData(types.DataResponse{Data: answer, Result: rounded_value}, token)
+
+		defer res.Body.Close()
+
+		message := types.Message{Status:res.StatusCode, Info: "data sent"}
+
+		if err := json.NewEncoder(w).Encode(message); err != nil {
+			http.Error(w, "failed sending data", http.StatusInternalServerError)
+		}
 	}
+
 }
