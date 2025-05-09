@@ -34,15 +34,6 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan 
 
 	valid := auth.Validate_token(token)
 
-	/*
-
-		logeado: vue -> miguel -> token Bearer <token> ->  go logeado -> guarda en bd
-		-> envia en post al vue con token
-
-		no logeado: vue -> miguel -> token null -> go no logeado -> envia post al vue
-
-	*/
-
 	var answer types.Data
 
 	if err := json.NewDecoder(r.Body).Decode(&answer); err != nil {
@@ -100,10 +91,6 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan 
 		rounded_value := float32(math.Round(float64(not_logged_value)*10) / 10)
 
 		w.WriteHeader(http.StatusOK)
-
-		if err := json.NewEncoder(w).Encode(types.DataResponse{Data: answer, Result: rounded_value}); err != nil {
-			http.Error(w, "failed to encode response", http.StatusInternalServerError)
-		}
 
 		res := utils.PostData(types.DataResponse{Data: answer, Result: rounded_value}, token)
 
