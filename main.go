@@ -14,8 +14,10 @@ import (
 
 func main() {
 
-	if e := godotenv.Load(); e != nil {
-		log.Fatalf("err getting envs %v", e)
+	if os.Getenv("ENV") != "production" {
+		if err := godotenv.Load(); err != nil {
+			log.Println("No .env file found, assuming production env")
+		}
 	}
 
 	utils.InitDB()
