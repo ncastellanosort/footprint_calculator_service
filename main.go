@@ -2,7 +2,6 @@ package main
 
 import (
 	"carbon_calculator/internal"
-	"carbon_calculator/types"
 	"carbon_calculator/utils"
 	"fmt"
 	"log"
@@ -19,16 +18,7 @@ func main() {
 		log.Fatalf("err getting envs %v", e)
 	}
 
-	utils.Connect()
-
-	if err := utils.DB.AutoMigrate(
-		&types.Transport{},
-		&types.Energy{},
-		&types.Waste{},
-		&types.Food{},
-	); err != nil {
-		log.Fatalf("migrate err %v", err)
-	}
+	utils.InitDB()
 
 	PORT := os.Getenv("PORT")
 	if PORT == "" {

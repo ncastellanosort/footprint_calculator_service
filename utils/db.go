@@ -25,6 +25,21 @@ func Connect() {
 
 }
 
+func InitDB () {
+
+	Connect()
+
+	if err := DB.AutoMigrate(
+		&types.Transport{},
+		&types.Energy{},
+		&types.Waste{},
+		&types.Food{},
+	); err != nil {
+		log.Fatalf("migrate err %v", err)
+	}
+
+}
+
 func SaveAnswersDB(r map[int][]float32) error {
 	var wg sync.WaitGroup
 
