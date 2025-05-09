@@ -9,8 +9,6 @@ import (
 	"net/http"
 	"os"
 	"sync"
-
-	"github.com/joho/godotenv"
 )
 
 func MultiplyAnswersAndEF(answers []float32, ef []float32) float32 {
@@ -114,7 +112,7 @@ func GetAnswers(logged bool, answer *types.Data, convertArrayCh chan types.Array
 func PostData(data types.DataResponse, token string) *http.Response {
 	b, err := json.Marshal(data)
 	if err != nil {
-		log.Fatalf("err encoding json: %w", err)
+		log.Fatalf("err encoding json: %v", err)
 	}
 
 	url := os.Getenv("VUE_URL")
@@ -124,7 +122,7 @@ func PostData(data types.DataResponse, token string) *http.Response {
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(b))
 	if err != nil {
-		log.Fatalf("err creating request %w", err)
+		log.Fatalf("err creating request %v", err)
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -132,7 +130,7 @@ func PostData(data types.DataResponse, token string) *http.Response {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Fatalf("err making post %w", err)
+		log.Fatalf("err making post %v", err)
 	}
 
 	return resp

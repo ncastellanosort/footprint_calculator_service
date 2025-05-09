@@ -6,7 +6,6 @@ import (
 	"os"
 	"sync"
 
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -14,12 +13,6 @@ import (
 var DB *gorm.DB
 
 func Connect() {
-	e := godotenv.Load()
-
-	if e != nil {
-		log.Fatal("err getting env", e)
-	}
-
 	dsn := os.Getenv("AWS_RDS_URL")
 
 	var err error

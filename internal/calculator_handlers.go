@@ -32,7 +32,7 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan 
 
 	token := r.Header.Get("Authorization")
 
-	valid := auth.Validate_token(token)
+	valid := auth.ValidateToken(token)
 
 	var answer types.Data
 

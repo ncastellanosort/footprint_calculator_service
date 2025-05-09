@@ -7,28 +7,40 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"sync"
-)
 
-const PORT int = 8080
+	"github.com/joho/godotenv"
+)
 
 func main() {
 
+	if e := godotenv.Load(); e != nil {
+		log.Fatalf("err getting envs %v", e)
+	}
+
 	utils.Connect()
 
-	err := utils.DB.AutoMigrate(&types.Transport{}, &types.Energy{}, &types.Waste{}, &types.Food{})
-
-	if err != nil {
-		log.Fatal("Migrate err", err)
+	if err := utils.DB.AutoMigrate(
+		&types.Transport{},
+		&types.Energy{},
+		&types.Waste{},
+		&types.Food{},
+	); err != nil {
+		log.Fatalf("migrate err %v", err)
 	}
-	fmt.Println(fmt.Sprintf("server running on http://localhost:%d", PORT))
-	wg := &sync.WaitGroup{}
 
+	PORT := os.Getenv("PORT")
+	if PORT == "" {
+		log.Fatalf("port not set in env")
+	}
+	fmt.Printf("server running on http://localhost:%s", PORT)
+
+	wg := &sync.WaitGroup{}
 	internal.SetupCalculatorRoutes(wg)
 
-	err = http.ListenAndServe(fmt.Sprintf(":%d", PORT), nil)
-	if err != nil {
-		log.Fatal(err)
+	if err := http.ListenAndServe(fmt.Sprintf(":%s", PORT), nil); err != nil {
+		log.Fatalf("err starting %v", err)
 	}
 
 }

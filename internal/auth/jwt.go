@@ -5,10 +5,9 @@ import (
 	"os"
 
 	"github.com/golang-jwt/jwt/v4"
-	"github.com/joho/godotenv"
 )
 
-func Extract_token(authHeader string) string {
+func ExtractToken(authHeader string) string {
     const prefix = "Bearer "
     if len(authHeader) > len(prefix) && authHeader[:len(prefix)] == prefix {
         return authHeader[len(prefix):]
@@ -17,12 +16,7 @@ func Extract_token(authHeader string) string {
 }
 
 
-func Validate_token(token_str string) bool {
-
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("err loading env", err)
-	}
+func ValidateToken(token_str string) bool {
 
 	key := os.Getenv("SECRET_KEY")
 
@@ -30,7 +24,7 @@ func Validate_token(token_str string) bool {
 		return false
 	}
 
-	raw_token := Extract_token(token_str)
+	raw_token := ExtractToken(token_str)
 
 	token, err := jwt.Parse(raw_token, func(token *jwt.Token) (interface{}, error) {
 		return []byte(key), nil
