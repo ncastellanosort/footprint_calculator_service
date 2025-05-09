@@ -43,64 +43,45 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan 
 
 	// user logged
 	if valid {
-
-		logged_answers, err := utils.GetAnswers(true, &answer, convertArrayCh, wg)
-		if err != nil {
-			http.Error(w, "failed getting answers", http.StatusInternalServerError)
-			return
-		}
-
-		logged_value, err := calc.Calculator(logged_answers, calculateCh, wg)
-
-		if err != nil {
-			http.Error(w, "calculate error", http.StatusInternalServerError)
-			return
-		}
-
-		rounded_value := float32(math.Round(float64(logged_value)*10) / 10)
-
-		w.WriteHeader(http.StatusOK)
-
-		res := utils.PostData(types.DataResponse{Data: answer, Result: rounded_value}, token)
-
-		defer res.Body.Close()
-
-		message := types.Message{Status:res.StatusCode, Info: "data sent"}
-
-		if err := json.NewEncoder(w).Encode(message); err != nil {
-			http.Error(w, "failed sending data", http.StatusInternalServerError)
-		}
-
+		processUserFlow(true, answer, token, w, calculateCh, wg, convertArrayCh)
 	} else {
-
-		// user not logged
-		not_logged_answers, err := utils.GetAnswers(false, &answer, convertArrayCh, wg)
-
-		if err != nil {
-			http.Error(w, "failed getting answers", http.StatusInternalServerError)
-			return
-		}
-
-		not_logged_value, err := calc.Calculator(not_logged_answers, calculateCh, wg)
-
-		if err != nil {
-			http.Error(w, "calculate error", http.StatusInternalServerError)
-			return
-		}
-
-		rounded_value := float32(math.Round(float64(not_logged_value)*10) / 10)
-
-		w.WriteHeader(http.StatusOK)
-
-		res := utils.PostData(types.DataResponse{Data: answer, Result: rounded_value}, token)
-
-		defer res.Body.Close()
-
-		message := types.Message{Status:res.StatusCode, Info: "data sent"}
-
-		if err := json.NewEncoder(w).Encode(message); err != nil {
-			http.Error(w, "failed sending data", http.StatusInternalServerError)
-		}
+		// not logged
+		processUserFlow(false, answer, token, w, calculateCh, wg, convertArrayCh)
 	}
 
+}
+
+func processUserFlow(is_logged bool, answer types.Data, token string, w http.ResponseWriter, calculateCh chan float32, wg *sync.WaitGroup, convertArrayCh chan types.ArrayData) {
+	answers, err := utils.GetAnswers(is_logged, &answer, convertArrayCh, wg)
+	if err != nil {
+		http.Error(w, "failed getting answers", http.StatusInternalServerError)
+		return
+	}
+
+	value, err := calc.Calculator(answers, calculateCh, wg)
+	if err != nil {
+		http.Error(w, "calculate error", http.StatusInternalServerError)
+		return
+	}
+
+	rounded := float32(math.Round(float64(value)*10) / 10)
+	response := types.DataResponse{Data: answer, Result: rounded}
+
+	res := utils.PostData(response, token)
+	if res == nil {
+		http.Error(w, "failed posting data", http.StatusInternalServerError)
+		return
+	}
+	defer res.Body.Close()
+
+	final := types.Message{
+		Status: res.StatusCode,
+		Info:   "data sent",
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	if err := json.NewEncoder(w).Encode(final); err != nil {
+		http.Error(w, "failed encoding response", http.StatusInternalServerError)
+	}
 }
