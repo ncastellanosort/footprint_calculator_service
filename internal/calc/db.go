@@ -1,4 +1,4 @@
-package utils
+package calc
 
 import (
 	"carbon_calculator/types"
@@ -22,11 +22,9 @@ func Connect() {
 	if err != nil {
 		log.Fatal("error connect db", err)
 	}
-
 }
 
 func InitDB () {
-
 	Connect()
 
 	if err := DB.AutoMigrate(
@@ -34,13 +32,14 @@ func InitDB () {
 		&types.Energy{},
 		&types.Waste{},
 		&types.Food{},
+		&types.CarbonResult{},
 	); err != nil {
 		log.Fatalf("migrate err %v", err)
 	}
 
 }
 
-func SaveAnswersDB(r map[int][]float32) error {
+func SaveAnswersDB(r map[int][]float32, v float32) error {
 	var wg sync.WaitGroup
 
 	transport := types.Transport{
@@ -79,7 +78,12 @@ func SaveAnswersDB(r map[int][]float32) error {
 		User_id:        10,
 	}
 
-	entities := []interface{}{&transport, &waste, &energy, &food}
+	result := types.CarbonResult{
+		Total: v,
+		User_id: 10,
+	}
+
+	entities := []interface{}{&transport, &waste, &energy, &food, &result}
 
 	for _, entity := range entities {
 		wg.Add(1)

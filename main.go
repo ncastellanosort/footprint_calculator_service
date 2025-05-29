@@ -2,7 +2,7 @@ package main
 
 import (
 	"carbon_calculator/internal"
-	"carbon_calculator/utils"
+	"carbon_calculator/internal/calc"
 	"fmt"
 	"log"
 	"net/http"
@@ -13,14 +13,13 @@ import (
 )
 
 func main() {
-
 	if os.Getenv("ENV") != "production" {
 		if err := godotenv.Load(); err != nil {
 			log.Println("assuming production env")
 		}
 	}
 
-	utils.InitDB()
+	calc.InitDB()
 
 	PORT := os.Getenv("PORT")
 	if PORT == "" {

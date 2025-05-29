@@ -1,10 +1,9 @@
-package utils
+package calc
 
 import (
 	"bytes"
 	"carbon_calculator/types"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -63,8 +62,7 @@ func AnswersToArray(pos int, d map[string]int, k1 string, k2 string, k3 string, 
 	convertArrayCh <- arr
 }
 
-func GetAnswers(logged bool, answer *types.Data, convertArrayCh chan types.ArrayData, wg *sync.WaitGroup) (*types.Answers, error) {
-
+func GetAnswers(logged bool, answer *types.Data, convertArrayCh chan types.ArrayData, wg *sync.WaitGroup, calculateCh chan float32) (float32, error) {
 	wg.Add(4)
 
 	go AnswersToArray(0, answer.Energy, "applianceHours", "lightBulbs", "gasTanks", "hvacHours", convertArrayCh, wg)
@@ -81,31 +79,25 @@ func GetAnswers(logged bool, answer *types.Data, convertArrayCh chan types.Array
 		r[value.Index] = value.Array
 	}
 
-	if len(r) != 4 {
-		return nil, fmt.Errorf("there are not 4 lists, are %d", len(r))
-	}
+	a := &types.Answers{
+		Transport: r[2],
+		Energy:    r[0],
+		Waste:     r[3],
+		Food:      r[1],
+	} 
+
+	value, err := Calculator(a, calculateCh, wg)
 
 	if logged {
-
-		err := SaveAnswersDB(r)
+		err = SaveAnswersDB(r, value)
 		if err != nil {
 			log.Fatal("error saving answers in db")
 		}
 
-		return &types.Answers{
-			Transport: r[2],
-			Energy:    r[0],
-			Waste:     r[3],
-			Food:      r[1],
-		}, nil
+		return value, nil
 
 	} else {
-		return &types.Answers{
-			Transport: r[2],
-			Energy:    r[0],
-			Waste:     r[3],
-			Food:      r[1],
-		}, nil
+		return value, nil
 	}
 }
 

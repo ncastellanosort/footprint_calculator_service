@@ -6,7 +6,6 @@ import (
 )
 
 func Calculator(data *types.Answers, respch chan float32, wg *sync.WaitGroup) (float32, error) {
-
 	wg.Add(4)
 
 	go CalculateTransport(data.Transport, respch, wg)

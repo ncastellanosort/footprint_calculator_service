@@ -9,6 +9,12 @@ type Message struct {
 	Info string `json:"info"`
 }
 
+type CarbonResult struct {
+	gorm.Model
+	Total float32 
+	User_id int
+}
+
 type Answers struct {
 	Transport []float32 `json:"transport"`
 	Food      []float32 `json:"food"`

@@ -4,7 +4,6 @@ import (
 	"carbon_calculator/internal/auth"
 	"carbon_calculator/internal/calc"
 	"carbon_calculator/types"
-	"carbon_calculator/utils"
 	"encoding/json"
 	"math"
 	"net/http"
@@ -52,15 +51,9 @@ func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan 
 }
 
 func processUserFlow(is_logged bool, answer types.Data, token string, w http.ResponseWriter, calculateCh chan float32, wg *sync.WaitGroup, convertArrayCh chan types.ArrayData) {
-	answers, err := utils.GetAnswers(is_logged, &answer, convertArrayCh, wg)
+	value, err := calc.GetAnswers(is_logged, &answer, convertArrayCh, wg, calculateCh)
 	if err != nil {
 		http.Error(w, "failed getting answers", http.StatusInternalServerError)
-		return
-	}
-
-	value, err := calc.Calculator(answers, calculateCh, wg)
-	if err != nil {
-		http.Error(w, "calculate error", http.StatusInternalServerError)
 		return
 	}
 
