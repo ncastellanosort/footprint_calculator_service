@@ -26,7 +26,7 @@ func main() {
 	if PORT == "" {
 		log.Fatalf("port not set in env")
 	}
-	fmt.Printf("server running on http://localhost:%s", PORT)
+	fmt.Printf("server running on http://localhost:%s\n", PORT)
 
 	wg := &sync.WaitGroup{}
 	internal.SetupCalculatorRoutes(wg)

@@ -67,21 +67,26 @@ func processUserFlow(is_logged bool, answer types.Data, token string, w http.Res
 	rounded := float32(math.Round(float64(value)*10) / 10)
 	response := types.DataResponse{Data: answer, Result: rounded}
 
+	/*
 	res := utils.PostData(response, token)
 	if res == nil {
 		http.Error(w, "failed posting data", http.StatusInternalServerError)
 		return
 	}
 	defer res.Body.Close()
+	*/
 
+	/*
 	final := types.Message{
-		Status: res.StatusCode,
+		//Status: res.StatusCode,
+		Status: http.StatusOK,
 		Info:   "data sent",
 	}
+	*/
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(final); err != nil {
+	if err := json.NewEncoder(w).Encode(response); err != nil {
 		http.Error(w, "failed encoding response", http.StatusInternalServerError)
 	}
 }

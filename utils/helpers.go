@@ -117,7 +117,7 @@ func PostData(data types.DataResponse, token string) *http.Response {
 
 	url := os.Getenv("VUE_URL")
 	if url == "" {
-		log.Fatalf("err loading env")
+		log.Printf("vue url not set")
 	}
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(b))
