@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"carbon_calculator/types"
 	"encoding/json"
+	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -101,20 +103,20 @@ func GetAnswers(logged bool, answer *types.Data, convertArrayCh chan types.Array
 	}
 }
 
-func PostData(data types.DataResponse, token string) *http.Response {
+func PostRecommendations(data types.DataRecommendation, token string) types.RecommendationResponse {
 	b, err := json.Marshal(data)
 	if err != nil {
-		log.Fatalf("err encoding json: %v", err)
+		fmt.Printf("error encoding json: %v", err)
 	}
 
-	url := os.Getenv("VUE_URL")
+	url := os.Getenv("RECOMMENDATION_URL")
 	if url == "" {
-		log.Printf("vue url not set")
+		log.Printf("RECOMMENDATION_URL not set")
 	}
 
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(b))
 	if err != nil {
-		log.Fatalf("err creating request %v", err)
+		fmt.Printf("error creating request: %v", err)
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -122,9 +124,20 @@ func PostData(data types.DataResponse, token string) *http.Response {
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		log.Fatalf("err making post %v", err)
+		fmt.Printf("error making POST request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("error reading response body: %v", err)
 	}
 
-	return resp
+	var recommendation types.RecommendationResponse
+	if err := json.Unmarshal(body, &recommendation); err != nil {
+		fmt.Printf("error decoding JSON response: %v", err)
+	}
+
+	return recommendation 
 }
 

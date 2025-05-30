@@ -8,6 +8,7 @@ import (
 	"math"
 	"net/http"
 	"sync"
+	"time"
 )
 
 func CalculatorHandler(w http.ResponseWriter, r *http.Request, calculateCh chan float32, wg *sync.WaitGroup, convertArrayCh chan types.ArrayData) {
@@ -58,24 +59,22 @@ func processUserFlow(is_logged bool, answer types.Data, token string, w http.Res
 	}
 
 	rounded := float32(math.Round(float64(value)*10) / 10)
-	response := types.DataResponse{Data: answer, Result: rounded}
 
-	/*
-	res := utils.PostData(response, token)
-	if res == nil {
-		http.Error(w, "failed posting data", http.StatusInternalServerError)
-		return
+	data := types.DataRecommendation{
+		Date: time.Now().Format("2006-01-02"),
+		Energy: answer.Energy,
+		Food: answer.Food,
+		Transport: answer.Transport,
+		Waste: answer.Waste,
+		Result: rounded,
 	}
-	defer res.Body.Close()
-	*/
 
-	/*
-	final := types.Message{
-		//Status: res.StatusCode,
-		Status: http.StatusOK,
-		Info:   "data sent",
+	recommendation := calc.PostRecommendations(data, token)
+
+	response := types.FullRecommendation{
+		DataRecommendation:      data,
+		RecommendationResponse:  recommendation,
 	}
-	*/
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)

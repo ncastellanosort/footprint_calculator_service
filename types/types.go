@@ -9,6 +9,28 @@ type Message struct {
 	Info string `json:"info"`
 }
 
+type RecommendationResponse struct {
+	GlobalRecommendation struct {
+		Category   string `json:"category"`
+		Suggestion string `json:"suggestion"`
+	} `json:"global_recommendation"`
+	CategoryRecommendations struct {
+		Transport []struct {
+			Suggestion string `json:"suggestion"`
+		} `json:"transport"`
+		Food []struct {
+			Suggestion string `json:"suggestion"`
+		} `json:"food"`
+		Energy []struct {
+			Suggestion string `json:"suggestion"`
+		} `json:"energy"`
+		Waste []struct {
+			Suggestion string `json:"suggestion"`
+		} `json:"waste"`
+	} `json:"category_recommendations"`
+	Notes any `json:"notes"` 
+}
+
 type CarbonResult struct {
 	gorm.Model
 	Total float32 
@@ -35,9 +57,18 @@ type Data struct {
 	Waste     map[string]int `json:"waste"`
 }
 
-type DataResponse struct {
-	Data   Data    `json:"data"`
-	Result float32 `json:"result"`
+type DataRecommendation struct {
+	Date      string         `json:"date"`
+	Energy    map[string]int `json:"energy"`
+	Food      map[string]int `json:"food"`
+	Transport map[string]int `json:"transport"`
+	Waste     map[string]int `json:"waste"`
+	Result    float32 `json:"result"`
+}
+
+type FullRecommendation struct {
+	DataRecommendation
+	RecommendationResponse
 }
 
 var EmisionFactors = struct {
