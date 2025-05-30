@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"encoding/base64"
 	"log"
 	"os"
 
@@ -8,17 +9,15 @@ import (
 )
 
 func ExtractToken(authHeader string) string {
-    const prefix = "Bearer "
-    if len(authHeader) > len(prefix) && authHeader[:len(prefix)] == prefix {
-        return authHeader[len(prefix):]
-    }
-    return authHeader 
+	const prefix = "Bearer "
+	if len(authHeader) > len(prefix) && authHeader[:len(prefix)] == prefix {
+		return authHeader[len(prefix):]
+	}
+	return authHeader
 }
 
-
 func ValidateToken(token_str string) bool {
-
-	key := os.Getenv("SECRET_KEY")
+	encodedKey := os.Getenv("SECRET_KEY")
 
 	if token_str == "" {
 		return false
@@ -26,14 +25,21 @@ func ValidateToken(token_str string) bool {
 
 	raw_token := ExtractToken(token_str)
 
+	key, err := base64.RawURLEncoding.DecodeString(encodedKey)
+	if err != nil {
+		log.Fatal("error decoding secret key:", err)
+		return false
+	}
+
 	token, err := jwt.Parse(raw_token, func(token *jwt.Token) (interface{}, error) {
-		return []byte(key), nil
+		return key, nil
 	})
 
 	if err != nil || !token.Valid {
-		log.Fatal("invalid token", err)
+		log.Println("invalid token:", err)
 		return false
 	}
 
 	return true
 }
+
