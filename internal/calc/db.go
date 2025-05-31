@@ -48,7 +48,7 @@ func SaveAnswersDB(r map[int][]float32, v float32) error {
 		DomesticFlights:      r[2][2],
 		InternationalFlights: r[2][3],
 		Total:                SumAnswers(r[2]),
-		User_id:              10,
+		User_id:              1,
 	}
 
 	food := types.Food{
@@ -57,7 +57,7 @@ func SaveAnswersDB(r map[int][]float32, v float32) error {
 		Dairy:      r[1][2],
 		Vegetarian: r[1][3],
 		Total:      SumAnswers(r[1]),
-		User_id:    10,
+		User_id:    1,
 	}
 
 	waste := types.Waste{
@@ -66,7 +66,7 @@ func SaveAnswersDB(r map[int][]float32, v float32) error {
 		PlasticBottles: r[3][2],
 		PaperPackages:  r[3][3],
 		Total:          SumAnswers(r[3]),
-		User_id:        10,
+		User_id:        1,
 	}
 
 	energy := types.Energy{
@@ -75,12 +75,12 @@ func SaveAnswersDB(r map[int][]float32, v float32) error {
 		GasTanks:       r[0][2],
 		HvacHours:      r[0][3],
 		Total:          SumAnswers(r[0]),
-		User_id:        10,
+		User_id:        1,
 	}
 
 	result := types.CarbonResult{
 		Total: v,
-		User_id: 10,
+		User_id: 1,
 	}
 
 	entities := []interface{}{&transport, &waste, &energy, &food, &result}
